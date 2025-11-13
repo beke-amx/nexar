@@ -33,7 +33,7 @@ function Header() {
 
   return (
     <header
-      className={`flex gap-15 z-50 text-neutral-900 backdrop-blur-lg bg-white/60 rounded-lg items-center justify-between max-w-5xl m-4 px-5 py-2 lg:mx-auto mx-1 fixed left-0 right-0 top-4 transition-transform duration-300 shadow-sm
+      className={`flex gap-15 z-50 text-neutral-900 backdrop-blur-lg bg-white/60 rounded-lg items-center justify-between max-w-dvw  lg:max-w-5xl m-4 px-5 py-2 lg:mx-auto mx-1 fixed left-0 right-0 top-0 transition-transform duration-300 shadow-sm
         ${showHeader || "hidden"} 
       `}
     >
