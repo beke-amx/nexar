@@ -4,6 +4,7 @@ import { AlignJustify, X } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { Drawer } from "vaul";
 import Image from "next/image";
+import VerticalCutReveal from "./ui/vertical-cut-reveal";
 
 function Header() {
   const isMobile = useMediaQuery("(max-width: 992px)");
