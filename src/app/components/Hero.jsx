@@ -2,26 +2,11 @@
 import { TimelineContent } from "./ui/timeline-animation";
 import VerticalBarsNoise from "./ui/vertical-bars";
 import VerticalCutReveal from "./ui/vertical-cut-reveal";
-import { useMediaQuery } from "../hooks/use-media-query";
-import { AlignJustify, X } from "lucide-react";
-import { useRef, useState } from "react";
-import { Drawer } from "vaul";
-import Image from "next/image";
+
+import { useRef } from "react";
 
 function Hero() {
-  const isMobile = useMediaQuery("(max-width: 992px)");
-  const [isOpen, setIsOpen] = useState(false);
   const heroRef = useRef(null);
-
-  const revealVariants = {
-    visible: (i) => ({
-      y: 0,
-      opacity: 1,
-      filter: "blur(0px)",
-      transition: { delay: i * 0.4, duration: 0.5 },
-    }),
-    hidden: { filter: "blur(10px)", y: -20, opacity: 0 },
-  };
 
   return (
     <section
