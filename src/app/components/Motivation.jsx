@@ -4,10 +4,6 @@ import React, { useRef } from "react";
 function Motivation() {
   return (
     <div className="max-w-5xl mx-auto">
-      <div className="h-[550px] grid place-content-center">
-        <h1 className="text-5xl font-semibold">Scroll Down👇</h1>
-      </div>
-
       <div className="h-[80vh] flex flex-col justify-center items-center text-center">
         <TextAnimation
           text="Creative ideas start here."
