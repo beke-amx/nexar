@@ -7,6 +7,7 @@ import Hero from "./components/Hero";
 import { ReactLenis } from "lenis/react";
 import AboutUs from "./components/Aboutus";
 import Header from "./components/Header";
+import Motivation from "./components/Motivation";
 
 export default function HomePage() {
   const [introComplete, setIntroComplete] = useState(false);
@@ -22,6 +23,7 @@ export default function HomePage() {
           <>
             <Header />
             <Hero />
+            <Motivation />
             <AboutUs />
           </>
         )}
