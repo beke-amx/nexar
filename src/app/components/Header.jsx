@@ -4,7 +4,6 @@ import { AlignJustify, X } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { Drawer } from "vaul";
 import Image from "next/image";
-import VerticalCutReveal from "./ui/vertical-cut-reveal";
 
 function Header() {
   const isMobile = useMediaQuery("(max-width: 992px)");
@@ -108,35 +107,21 @@ function Header() {
 
                 <div className="rounded-b-md py-4 px-3 mt-4">
                   <ul className="space-y-2 text-neutral-950 font-medium">
-                    <VerticalCutReveal
-                      splitBy="words"
-                      staggerDuration={0.15}
-                      staggerFrom="first"
-                      containerClassName="justify-center"
-                      reverse={true}
-                      transition={{
-                        type: "spring",
-                        stiffness: 250,
-                        damping: 40,
-                        delay: 0.4,
-                      }}
-                    >
-                      <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
-                        Features
-                      </li>
-                      <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
-                        Services
-                      </li>
-                      <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
-                        Portfolio
-                      </li>
-                      <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
-                        About
-                      </li>
-                      <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
-                        Contact
-                      </li>
-                    </VerticalCutReveal>
+                    <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
+                      Features
+                    </li>
+                    <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
+                      Services
+                    </li>
+                    <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
+                      Portfolio
+                    </li>
+                    <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
+                      About
+                    </li>
+                    <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
+                      Contact
+                    </li>
                   </ul>
                 </div>
               </div>
