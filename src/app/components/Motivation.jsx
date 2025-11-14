@@ -50,7 +50,7 @@ function Motivation() {
 
       <div className="h-[80vh] flex justify-center items-center text-center">
         <TextAnimation
-          text="Dream big, work hard & let's do the work for you  "
+          text="Dream big, work hard & achieve greatness "
           direction="down"
           lineAnime={true}
           classname="text-7xl sm:text-5xl max-w-md mx-auto capitalize"
