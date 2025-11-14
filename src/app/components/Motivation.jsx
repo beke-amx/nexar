@@ -53,7 +53,7 @@ function Motivation() {
           text="Dream big, work hard & achieve greatness "
           direction="down"
           lineAnime={true}
-          classname="text-7xl sm:text-5xl max-w-md mx-auto capitalize"
+          classname="text-5xl sm:text-7xl max-w-md mx-auto capitalize"
         />
       </div>
     </div>
