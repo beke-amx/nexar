@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 "use client";
 import TextAnimation from "./ui/scroll-text";
 import React from "react";
+=======
+import TextAnimation from "./ui/scroll-text";
+import React, { useRef } from "react";
+>>>>>>> 764d7959d32ee2c6b8097327ff1a306096ccb445
 
 function Motivation() {
   return (
