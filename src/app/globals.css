@@ -22,7 +22,6 @@
 .animate-fadeIn {
   animation: fadeIn 0.6s ease-out forwards;
 }
-<<<<<<< HEAD
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -153,5 +152,3 @@
     overflow-x: hidden;
   }
 }
-=======
->>>>>>> 764d7959d32ee2c6b8097327ff1a306096ccb445
