@@ -8,12 +8,9 @@ import { ReactLenis } from "lenis/react";
 import AboutUs from "./components/Aboutus";
 import Header from "./components/Header";
 import Motivation from "./components/Motivation";
-<<<<<<< HEAD
 import Portfolio from "./components/Portfolio";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
-=======
->>>>>>> 764d7959d32ee2c6b8097327ff1a306096ccb445
 
 export default function HomePage() {
   const [introComplete, setIntroComplete] = useState(false);
@@ -31,12 +28,9 @@ export default function HomePage() {
             <Hero />
             <Motivation />
             <AboutUs />
-<<<<<<< HEAD
             <Portfolio />
             <Contact />
             <Footer />
-=======
->>>>>>> 764d7959d32ee2c6b8097327ff1a306096ccb445
           </>
         )}
       </main>
