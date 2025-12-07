@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useMediaQuery } from "../hooks/use-media-query";
 
 export default function SmoothFollower() {
   // 1️⃣ All hooks at the top
   const [mounted, setMounted] = useState(false);
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
   const mousePosition = useRef({ x: 0, y: 0 });
   const dotPosition = useRef({ x: 0, y: 0 });
   const borderDotPosition = useRef({ x: 0, y: 0 });
@@ -25,7 +27,7 @@ export default function SmoothFollower() {
 
   // 3️⃣ Animation & event listeners
   useEffect(() => {
-    if (!mounted) return; // ✅ use the mounted flag inside effect, don't conditionally call hooks
+    if (!mounted || !isDesktop) return; // ✅ use the mounted flag inside effect, don't conditionally call hooks
 
     const handleMouseMove = (e) => {
       mousePosition.current = { x: e.clientX, y: e.clientY };
@@ -91,7 +93,7 @@ export default function SmoothFollower() {
     };
   }, [mounted]); // dependency ensures effect runs after mounted
 
-  if (!mounted) return null; // ✅ render nothing until mounted
+  if (!mounted || !isDesktop) return null; // ✅ render nothing until mounted or on mobile
 
   return (
     <div className="pointer-events-none fixed inset-0 z-50">

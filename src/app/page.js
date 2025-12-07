@@ -9,6 +9,9 @@ import AboutUs from "./components/Aboutus";
 import Header from "./components/Header";
 import Motivation from "./components/Motivation";
 import Portfolio from "./components/Portfolio";
+import CTA from "./components/CTA";
+import Testimonials from "./components/Testimonials";
+import Newsletter from "./components/Newsletter";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -29,6 +32,9 @@ export default function HomePage() {
             <Motivation />
             <AboutUs />
             <Portfolio />
+            <CTA />
+            <Testimonials />
+            <Newsletter />
             <Contact />
             <Footer />
           </>

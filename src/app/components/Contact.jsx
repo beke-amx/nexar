@@ -1,60 +1,103 @@
 "use client";
 
-import { useState } from "react";
-import { Mail, Phone, MapPin, Send, Facebook, Instagram, Linkedin } from "lucide-react";
+import React from "react";
+import { motion } from "motion/react";
+import dynamic from "next/dynamic";
+import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin } from "lucide-react";
 import VerticalCutReveal from "./ui/vertical-cut-reveal";
 
+const World = dynamic(() => import("./ui/globe").then((m) => m.World), {
+  ssr: false,
+});
+
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    service: "",
-    message: "",
-  });
-
-  const [errors, setErrors] = useState({});
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
-    }
+  const globeConfig = {
+    pointSize: 4,
+    globeColor: "#1e40af",
+    showAtmosphere: true,
+    atmosphereColor: "#60a5fa",
+    atmosphereAltitude: 0.2,
+    emissive: "#1e3a8a",
+    emissiveIntensity: 0.3,
+    shininess: 0.9,
+    polygonColor: "rgba(96, 165, 250, 0.3)",
+    ambientLight: "#60a5fa",
+    directionalLeftLight: "#93c5fd",
+    directionalTopLight: "#93c5fd",
+    pointLight: "#60a5fa",
+    arcTime: 1500,
+    autoRotate: true,
+    autoRotateSpeed: 0.6,
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-    if (!formData.message.trim()) newErrors.message = "Message is required";
-    return newErrors;
-  };
+  const colors = ["#06b6d4", "#3b82f6", "#6366f1"];
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length === 0) {
-      // Form is valid - handle submission
-      console.log("Form submitted:", formData);
-      alert("Thank you for your message! We'll get back to you soon.");
-      setFormData({ name: "", email: "", phone: "", service: "", message: "" });
-    } else {
-      setErrors(newErrors);
-    }
-  };
+  const sampleArcs = [
+    {
+      order: 1,
+      startLat: 9.145,
+      startLng: 40.4897,
+      endLat: 51.5072,
+      endLng: -0.1276,
+      arcAlt: 0.3,
+      color: colors[0],
+    },
+    {
+      order: 2,
+      startLat: 9.145,
+      startLng: 40.4897,
+      endLat: 40.7128,
+      endLng: -74.006,
+      arcAlt: 0.4,
+      color: colors[1],
+    },
+    {
+      order: 3,
+      startLat: 9.145,
+      startLng: 40.4897,
+      endLat: 25.2048,
+      endLng: 55.2708,
+      arcAlt: 0.2,
+      color: colors[2],
+    },
+    {
+      order: 4,
+      startLat: 9.145,
+      startLng: 40.4897,
+      endLat: -1.2921,
+      endLng: 36.8219,
+      arcAlt: 0.15,
+      color: colors[0],
+    },
+    {
+      order: 5,
+      startLat: 9.145,
+      startLng: 40.4897,
+      endLat: 35.6762,
+      endLng: 139.6503,
+      arcAlt: 0.5,
+      color: colors[1],
+    },
+    {
+      order: 6,
+      startLat: 9.145,
+      startLng: 40.4897,
+      endLat: 1.3521,
+      endLng: 103.8198,
+      arcAlt: 0.35,
+      color: colors[2],
+    },
+  ];
 
   return (
-    <section className="relative min-h-screen bg-black text-white py-20 px-4">
+    <section
+      id="contact"
+      className="relative min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white py-20 px-4"
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-7xl font-medium mb-4">
+          <h2 className="text-5xl md:text-7xl font-bold mb-4">
             <VerticalCutReveal
               splitBy="words"
               staggerDuration={0.05}
@@ -64,167 +107,118 @@ export default function Contact() {
               Get In Touch
             </VerticalCutReveal>
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Let's build something amazing together. Reach out and let's discuss your project.
+          <p className="text-gray-400 text-xl max-w-2xl mx-auto">
+            We connect businesses worldwide with innovative digital solutions
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <div className="order-2 lg:order-1">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Full Name *"
-                  className={`w-full px-4 py-3 bg-white/5 border ${
-                    errors.name ? "border-red-500" : "border-white/10"
-                  } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors`}
-                />
-                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-              </div>
+      
+        {/* Contact Information Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          {/* Email */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group"
+          >
+            <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-500/30 transition-all">
+              <Mail className="w-8 h-8 text-blue-400" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">Email Us</h3>
+            <a
+              href="mailto:info@nexartechsolution.com"
+              className="text-gray-400 hover:text-white transition-colors text-lg"
+            >
+              info@nexartechsolution.com
+            </a>
+          </motion.div>
 
-              <div>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Email Address *"
-                  className={`w-full px-4 py-3 bg-white/5 border ${
-                    errors.email ? "border-red-500" : "border-white/10"
-                  } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors`}
-                />
-                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-              </div>
-
-              <div>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="Phone Number"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
-                />
-              </div>
-
-              <div>
-                <select
-                  name="service"
-                  value={formData.service}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-white/30 transition-colors"
-                >
-                  <option value="" className="bg-black">Select Service</option>
-                  <option value="Web Development" className="bg-black">Web Development</option>
-                  <option value="Digital Marketing" className="bg-black">Digital Marketing</option>
-                  <option value="Branding" className="bg-black">Branding</option>
-                  <option value="Production" className="bg-black">Production</option>
-                </select>
-              </div>
-
-              <div>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Your Message *"
-                  rows="5"
-                  className={`w-full px-4 py-3 bg-white/5 border ${
-                    errors.message ? "border-red-500" : "border-white/10"
-                  } rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors resize-none`}
-                ></textarea>
-                {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-white text-black px-8 py-4 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 group"
+          {/* Phone */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group"
+          >
+            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-green-500/30 transition-all">
+              <Phone className="w-8 h-8 text-green-400" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">Call Us</h3>
+            <div className="space-y-1">
+              <a
+                href="tel:+251978225123"
+                className="text-gray-400 hover:text-white transition-colors block text-lg"
               >
-                Send Message
-                <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </form>
-          </div>
-
-          {/* Contact Information */}
-          <div className="order-1 lg:order-2 space-y-8">
-            <div>
-              <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>
-              
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="text-gray-400 text-sm mb-1">Email</p>
-                    <a href="mailto:info@nexartechsolution.com" className="text-white hover:text-gray-300 transition-colors">
-                      info@nexartechsolution.com
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="text-gray-400 text-sm mb-1">Phone</p>
-                    <a href="tel:+251911234567" className="text-white hover:text-gray-300 transition-colors">
-                      +251 911 234 567
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="text-gray-400 text-sm mb-1">Location</p>
-                    <p className="text-white">Addis Ababa, Ethiopia</p>
-                  </div>
-                </div>
-              </div>
+                +251 978 225 123
+              </a>
+              <a
+                href="tel:+251961413519"
+                className="text-gray-400 hover:text-white transition-colors block text-lg"
+              >
+                +251 961 413 519
+              </a>
             </div>
+          </motion.div>
 
-            {/* Social Media */}
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Follow Us</h3>
-              <div className="flex gap-4">
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors"
-                >
-                  <Facebook className="w-6 h-6" />
-                </a>
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors"
-                >
-                  <Instagram className="w-6 h-6" />
-                </a>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors"
-                >
-                  <Linkedin className="w-6 h-6" />
-                </a>
-              </div>
+          {/* Location */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group"
+          >
+            <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mb-4 group-hover:bg-purple-500/30 transition-all">
+              <MapPin className="w-8 h-8 text-purple-400" />
             </div>
-          </div>
+            <h3 className="text-xl font-bold mb-2">Visit Us</h3>
+            <p className="text-gray-400 text-lg">
+              Bole Japan Area
+              <br />
+              Addis Ababa, Ethiopia
+            </p>
+          </motion.div>
         </div>
+
+        {/* Social Media */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="text-center"
+        >
+          <h3 className="text-2xl font-bold mb-6">Follow Us</h3>
+          <div className="flex justify-center gap-6">
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-blue-600 hover:scale-110 transition-all duration-300 shadow-lg"
+            >
+              <Facebook className="w-8 h-8" />
+            </a>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-600 hover:scale-110 transition-all duration-300 shadow-lg"
+            >
+              <Instagram className="w-8 h-8" />
+            </a>
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-blue-700 hover:scale-110 transition-all duration-300 shadow-lg"
+            >
+              <Linkedin className="w-8 h-8" />
+            </a>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

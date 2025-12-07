@@ -7,8 +7,10 @@ import Image from "next/image";
 
 function Header() {
   const isMobile = useMediaQuery("(max-width: 992px)");
+  const isMedium = useMediaQuery("(min-width: 768px) and (max-width: 992px)");
   const [isOpen, setIsOpen] = useState(false);
-  const [showHeader, setShowHeader] = useState(true); // controls visibility
+  const [showHeader, setShowHeader] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
   const lastScrollY = useRef(0);
 
   // scroll listener
@@ -16,14 +18,13 @@ function Header() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
-        // scrolling down
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
         setShowHeader(false);
       } else {
-        // scrolling up
         setShowHeader(true);
       }
 
+      setIsScrolled(currentScrollY > 50);
       lastScrollY.current = currentScrollY;
     };
 
@@ -33,46 +34,78 @@ function Header() {
 
   return (
     <header
-      className={`flex gap-15 z-50 text-neutral-900 backdrop-blur-lg bg-white/60 rounded-lg items-center justify-between max-w-dvw  lg:max-w-5xl m-4 px-5 py-2 lg:mx-auto mx-1 fixed left-0 right-0 top-0 transition-transform duration-300 shadow-sm
-        ${showHeader || "hidden"} 
-      `}
+      className={`flex gap-4 z-50 text-neutral-900 backdrop-blur-xl items-center justify-between max-w-dvw lg:max-w-6xl m-4 px-4 md:px-6 py-3 lg:mx-auto mx-1 fixed left-0 right-0 top-0 transition-all duration-500 ease-out ${
+        showHeader ? "translate-y-0" : "-translate-y-32"
+      } ${
+        isScrolled 
+          ? "bg-white/90 shadow-xl rounded-2xl" 
+          : "bg-white/60 shadow-sm rounded-lg"
+      }`}
     >
       {!isMobile ? (
         <>
-          {/* Logo */}
-          <div className="flex items-center gap-2 px-4">
-            <Image
-              src="/photo/nexar.png"
-              alt="Nexar Logo"
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
-            <span className="text-xl font-semibold">Nexar</span>
+          {/* Logo with animation */}
+          <div className="flex items-center gap-3 px-2">
+            <div className="relative">
+              <Image
+                src="/photo/nexar.png"
+                alt="Nexar Logo"
+                width={isMedium ? 45 : 40}
+                height={isMedium ? 45 : 40}
+                className="rounded-full transition-all duration-300 hover:scale-110"
+              />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 animate-pulse" />
+            </div>
+            <div className="flex flex-col">
+              <span className={`font-bold transition-all duration-300 ${
+                isMedium ? "text-xl" : "text-lg"
+              }`}>
+                Nexar
+              </span>
+              {isMedium && (
+                <span className="text-xs text-gray-600 font-medium">
+                  Tech Solutions
+                </span>
+              )}
+            </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="flex gap-4 font-medium">
-            <a href="#">Features</a>
-            <a href="#">Services</a>
-            <a href="#">Portfolio</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
+          {/* Desktop Navigation with hover effects */}
+          <nav className="flex gap-8 font-medium">
+            {[
+              { name: "Services", href: "#services" },
+              { name: "Portfolio", href: "#portfolio" },
+              { name: "Testimonials", href: "#testimonials" },
+              { name: "Contact", href: "#contact" },
+            ].map((link, index) => (
+              <a
+                key={link.name}
+                href={link.href}
+                className="relative group py-2 transition-colors hover:text-gray-700"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                {link.name}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 group-hover:w-full" />
+              </a>
+            ))}
           </nav>
         </>
       ) : (
         // Mobile Drawer
         <Drawer.Root direction="right" open={isOpen} onOpenChange={setIsOpen}>
           <div className="flex items-center gap-3 justify-between w-full">
-            <Image
-              src="/photo/nexar.png"
-              alt="Nexar Logo"
-              width={35}
-              height={35}
-              className="rounded-full"
-            />
-            <Drawer.Trigger className="px-2 text-black h-9 grid place-content-center bg-neutral-300 w-fit rounded-lg">
-              <AlignJustify />
+            <div className="flex items-center gap-2">
+              <Image
+                src="/photo/nexar.png"
+                alt="Nexar Logo"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+              <span className="text-lg font-bold">Nexar</span>
+            </div>
+            <Drawer.Trigger className="px-3 py-2 text-black grid place-content-center bg-neutral-300 hover:bg-neutral-400 w-fit rounded-lg transition-all duration-300 hover:scale-105">
+              <AlignJustify className="w-5 h-5" />
             </Drawer.Trigger>
           </div>
 
@@ -107,20 +140,25 @@ function Header() {
 
                 <div className="rounded-b-md py-4 px-3 mt-4">
                   <ul className="space-y-2 text-neutral-950 font-medium">
-                    <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
-                      Features
+                    <li>
+                      <a href="#services" onClick={() => setIsOpen(false)} className="block hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
+                        Services
+                      </a>
                     </li>
-                    <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
-                      Services
+                    <li>
+                      <a href="#portfolio" onClick={() => setIsOpen(false)} className="block hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
+                        Portfolio
+                      </a>
                     </li>
-                    <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
-                      Portfolio
+                    <li>
+                      <a href="#testimonials" onClick={() => setIsOpen(false)} className="block hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
+                        Testimonials
+                      </a>
                     </li>
-                    <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
-                      About
-                    </li>
-                    <li className="hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
-                      Contact
+                    <li>
+                      <a href="#contact" onClick={() => setIsOpen(false)} className="block hover:bg-neutral-200 cursor-pointer p-2 rounded-md">
+                        Contact
+                      </a>
                     </li>
                   </ul>
                 </div>

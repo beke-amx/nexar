@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useRef } from "react";
 import {
   motion,
   useScroll,
@@ -18,14 +18,14 @@ export const HeroParallax = ({ products }) => {
     offset: ["start start", "end start"],
   });
 
-  const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
+  const springConfig = { stiffness: 80, damping: 25, bounce: 0, mass: 1 };
 
   const translateX = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, -1500]),
+    useTransform(scrollYProgress, [0, 1], [0, -800]),
     springConfig
   );
   const translateXReverse = useSpring(
-    useTransform(scrollYProgress, [0, 1], [0, 1500]),
+    useTransform(scrollYProgress, [0, 1], [0, 800]),
     springConfig
   );
   const rotateX = useSpring(
@@ -48,6 +48,7 @@ export const HeroParallax = ({ products }) => {
   return (
     <div
       ref={ref}
+      id="portfolio"
       className="h-[300vh] py-20 md:py-40 overflow-hidden antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d] bg-black"
     >
       <Header />
@@ -69,16 +70,51 @@ export const HeroParallax = ({ products }) => {
 };
 
 const DraggableRow = ({ products, direction, scrollTranslate }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const constraintsRef = useRef(null);
+  
   return (
     <motion.div
+      ref={constraintsRef}
       drag="x"
-      dragConstraints={{ left: -1000, right: 1000 }}
+      dragConstraints={{ left: -600, right: 600 }}
       dragElastic={0.1}
-      style={{ x: scrollTranslate }}
-      className={`flex ${direction === 'reverse' ? 'flex-row-reverse space-x-reverse' : 'flex-row'} space-x-6 md:space-x-10 cursor-grab active:cursor-grabbing px-4`}
+      dragTransition={{ 
+        bounceStiffness: 200, 
+        bounceDamping: 25,
+        power: 0.3,
+      }}
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={(event, info) => {
+        setIsDragging(false);
+        setDragOffset(info.offset.x);
+      }}
+      style={{ 
+        x: useTransform(
+          scrollTranslate,
+          (value) => value + dragOffset
+        )
+      }}
+      initial={{ opacity: 0, x: direction === 'reverse' ? 100 : -100 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ 
+        duration: 0.8, 
+        ease: [0.25, 0.1, 0.25, 1],
+        delay: 0.2 
+      }}
+      className={`flex ${direction === 'reverse' ? 'flex-row-reverse space-x-reverse' : 'flex-row'} space-x-6 md:space-x-10 ${
+        isDragging ? 'cursor-grabbing' : 'cursor-grab'
+      } px-4 will-change-transform`}
     >
-      {products.map((product) => (
-        <ProductCard product={product} key={product.title} />
+      {products.map((product, index) => (
+        <ProductCard 
+          product={product} 
+          key={product.title}
+          index={index}
+          isDragging={isDragging}
+        />
       ))}
     </motion.div>
   );
@@ -102,21 +138,35 @@ export const Header = () => {
   );
 };
 
-export const ProductCard = ({ product }) => {
+export const ProductCard = ({ product, index, isDragging }) => {
+  const [showDetails, setShowDetails] = useState(false);
+
   return (
     <motion.div
-      whileHover={{
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ 
+        duration: 0.5, 
+        delay: index * 0.1,
+        ease: "easeOut" 
+      }}
+      whileHover={!isDragging ? {
         y: -20,
         scale: 1.05,
-      }}
-      transition={{ duration: 0.3 }}
-      className="group/product h-64 w-80 md:h-96 md:w-[30rem] relative flex-shrink-0 rounded-lg overflow-hidden shadow-2xl"
+      } : {}}
+      onMouseEnter={() => !isDragging && setShowDetails(true)}
+      onMouseLeave={() => setShowDetails(false)}
+      className="group/product h-64 w-80 md:h-96 md:w-[30rem] relative flex-shrink-0 rounded-xl overflow-hidden shadow-2xl will-change-transform"
     >
       <Link
         href={product.link}
         className="block h-full w-full"
-        target="_blank"
-        rel="noopener noreferrer"
+        onClick={(e) => {
+          if (isDragging) {
+            e.preventDefault();
+          }
+        }}
       >
         <img
           src={product.thumbnail}
@@ -126,10 +176,43 @@ export const ProductCard = ({ product }) => {
           alt={product.title}
           draggable={false}
         />
-        <div className="absolute inset-0 h-full w-full bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover/product:opacity-90 transition-opacity duration-300"></div>
-        <h2 className="absolute bottom-6 left-6 right-6 text-white text-lg md:text-2xl font-semibold">
-          {product.title}
-        </h2>
+        <div className="absolute inset-0 h-full w-full bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-70 group-hover/product:opacity-95 transition-opacity duration-300"></div>
+        
+        {/* Project Info */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 transform transition-transform duration-300">
+          <div className="mb-2">
+            <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium text-white mb-2">
+              {product.category}
+            </span>
+          </div>
+          <h2 className="text-white text-lg md:text-2xl font-bold mb-2">
+            {product.title}
+          </h2>
+          
+          {/* Details that appear on hover */}
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ 
+              opacity: showDetails ? 1 : 0, 
+              height: showDetails ? 'auto' : 0 
+            }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <p className="text-gray-300 text-sm mb-2 line-clamp-2">
+              {product.description}
+            </p>
+            <p className="text-gray-400 text-xs">
+              Client: {product.client}
+            </p>
+            <div className="mt-3 flex items-center gap-2 text-white text-sm font-medium">
+              <span>View Project</span>
+              <svg className="w-4 h-4 transform group-hover/product:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </motion.div>
+        </div>
       </Link>
     </motion.div>
   );

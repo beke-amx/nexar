@@ -59,9 +59,10 @@ function Hero() {
         </p>
 
         <div className="flex gap-3 mt-8">
-          <button className="text-lg h-12 px-6 rounded-lg text-white flex items-center gap-2 bg-neutral-800 relative before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-2 before:bg-gradient-to-t before:from-neutral-800 before:to-neutral-300 before:rounded-t-lg transition-all group">
+          <a href="#services"> <button className="text-lg h-12 px-6 rounded-lg text-white flex items-center gap-2 bg-neutral-800 relative before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-2 before:bg-gradient-to-t before:from-neutral-800 before:to-neutral-300 before:rounded-t-lg transition-all group">
             Explore Services
-          </button>
+          </button></a>
+         
         </div>
       </div>
     </section>
